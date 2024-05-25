@@ -98,12 +98,13 @@ app.post('/api/seller/property', async (req, res) => {
     const { sellerId, name, place, area, bedrooms, bathrooms, nearby } = req.body;
     const property = new Property({ sellerId, name, place, area, bedrooms, bathrooms, nearby });
     await property.save();
-    res.send(property);
+    res.send({ property, sellerId });
   } catch (error) {
     console.error('Error posting property', error);
     res.status(500).send({ error: 'Internal Server Error' });
   }
 });
+
 app.get('/api/seller/properties', async (req, res) => {
   try {
     const { sellerId } = req.query;
