@@ -15,6 +15,7 @@ interface Property {
 const Seller: React.FC = () => {
   const [error, setError] = useState("");
   const [properties, setProperties] = useState<Property[]>([]);
+  const [sellerId, setSellerId] = useState("");
   const [propertyDetails, setPropertyDetails] = useState({
     name: "",
     place: "",
@@ -26,7 +27,7 @@ const Seller: React.FC = () => {
   const fetchProperties = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/seller/properties"
+        `http://localhost:5000/api/seller/properties?sellerId=${sellerId}`
       );
       setProperties(response.data);
     } catch (error) {
@@ -42,16 +43,16 @@ const Seller: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { name, place, area, bedrooms, bathrooms, nearby } = propertyDetails;
-
+  
     if (!name || !place || !area || !bedrooms || !bathrooms || !nearby) {
       setError("Please fill in all fields.");
       return;
     }
-
+  
     try {
-      await axios.post(
+      const response = await axios.post(
         "http://localhost:5000/api/seller/property",
-        propertyDetails
+        { ...propertyDetails, sellerId: localStorage.getItem("sellerId") } // Retrieve sellerId from storage
       );
       fetchProperties();
       setError("");
@@ -70,6 +71,7 @@ const Seller: React.FC = () => {
       );
     }
   };
+  
 
   const handleDelete = async (id: string) => {
     try {
@@ -81,8 +83,12 @@ const Seller: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchProperties();
-  }, []);
+    const sellerIdFromStorage = localStorage.getItem("sellerId");
+    if (sellerIdFromStorage) {
+      setSellerId(sellerIdFromStorage);
+      fetchProperties();
+    }
+  }, [sellerId]);
 
   return (
     <>
