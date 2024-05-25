@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./seller.css";
-import logo from "../logo.png";
-import userProfile from "../user.png";
-import { useNavigate } from "react-router-dom";
 
 interface Property {
   _id: string;
@@ -16,6 +13,7 @@ interface Property {
 }
 
 const Seller: React.FC = () => {
+  const [error, setError] = useState("");
   const [properties, setProperties] = useState<Property[]>([]);
   const [propertyDetails, setPropertyDetails] = useState({
     name: "",
@@ -25,27 +23,6 @@ const Seller: React.FC = () => {
     bathrooms: "",
     nearby: "",
   });
-  const [error, setError] = useState("");
-  const [isHovered, setIsHovered] = useState(false);
-
-  const navigate = useNavigate();
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
-
-  const handleLoginClick = () => {
-    navigate("/login");
-  };
-
-  const handleRegisterClick = () => {
-    navigate("/register");
-  };
-
   const fetchProperties = async () => {
     try {
       const response = await axios.get(
@@ -109,32 +86,6 @@ const Seller: React.FC = () => {
 
   return (
     <>
-      <nav className="navbar">
-        <div className="navbar__logo">
-          <img src={logo} alt="logo" />
-          <span>Rent Vila</span>
-        </div>
-        <div
-          className="navbar__user-profile"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <img src={userProfile} alt="User Profile" />
-          {isHovered && (
-            <div className="navbar__hover-text">
-              <div className="navbar__hover-option" onClick={handleLoginClick}>
-                Login
-              </div>
-              <div
-                className="navbar__hover-option"
-                onClick={handleRegisterClick}
-              >
-                Register
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
       <div className="seller-container">
         <h1 className="seller-container__header">Post a New Property</h1>
         <form onSubmit={handleSubmit} className="seller-container__form">

@@ -5,13 +5,16 @@ import './login.css';
 
 import loginImage from '../zebra-loin.png';
 
-const Login: React.FC = () => {
+interface LoginProps {
+  onLogin: (userType: string) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  const [error, setError] = useState('');
-  const navigation = useNavigate();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -21,26 +24,26 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.log('Form data submitted:', formData); 
       const response = await axios.post('http://localhost:5000/api/login', formData);
       if (response.data.success) {
-        const userType = response.data.userType;
-        if (userType === 'seller') {
-          navigation('/seller');
-        } else if (userType === 'buyer') {
-          navigation('/buyer');
+        onLogin(response.data.userType);
+        if (response.data.userType === 'seller') {
+          navigate('/seller');
+        } else {
+          navigate('/buyer');
         }
       } else {
-        setError('Invalid email or password. Please try again.');
+        alert('Login failed: ' + response.data.message);
       }
     } catch (error) {
       console.error('Error logging in', error);
-      setError('An error occurred. Please try again later.');
     }
   };
+
   const handleSignUpClick = () => {
-    navigation('/register');
+    navigate('/register');
   };
+
   return (
     <div className="login-page">
       <div className="login-container">
@@ -61,7 +64,6 @@ const Login: React.FC = () => {
             </div>
             <button type="submit">Login</button>
           </form>
-          {error && <p className="login-error-message">{error}</p>}
           <p>Don't have an account? Please <a onClick={handleSignUpClick}>Sign Up</a>.</p>
         </div>
       </div>

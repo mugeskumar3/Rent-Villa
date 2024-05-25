@@ -4,17 +4,13 @@ import { FaBath, FaBed } from "react-icons/fa";
 import { SiGooglenearby } from "react-icons/si";
 import { BiArea } from "react-icons/bi";
 import "./Buyer.css";
-import image from "../zebra-loin.png";
-import logo from "../logo.png";
-import userProfile from "../user.png";
+import image from "../landing.jpg";
 import { HeroSection } from "./HeroSection";
 import { useNavigate } from "react-router-dom";
 
 const Buyer: React.FC = () => {
   const [properties, setProperties] = useState([]);
-  const [isHovered, setIsHovered] = useState(false);
   const [filteredProperties, setFilteredProperties] = useState([]);
-  const navigate = useNavigate();
   const [filter, setFilter] = useState({
     place: "",
     area: "",
@@ -74,50 +70,9 @@ const Buyer: React.FC = () => {
     fetchProperties();
   }, []);
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
-
-  const handleLoginClick = () => {
-    navigate("/login");
-  };
-
-  const handleRegisterClick = () => {
-    navigate("/register");
-  };
 
   return (
     <>
-      <nav className="navbar">
-        <div className="navbar__logo">
-          <img src={logo} alt="logo" />
-          <span>Rent Vila</span>
-        </div>
-        <div
-          className="navbar__user-profile"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <img src={userProfile} alt="User Profile" />
-          {isHovered && (
-            <div className="navbar__hover-text">
-              <div className="navbar__hover-option" onClick={handleLoginClick}>
-                Login
-              </div>
-              <div
-                className="navbar__hover-option"
-                onClick={handleRegisterClick}
-              >
-                Register
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
       <HeroSection />
       <div className="buyer-container">
         <div className="filter-section">
