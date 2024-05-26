@@ -66,13 +66,20 @@ const Buyer: React.FC = () => {
     alert(`Contact Seller: ${sellerDetails}`);
   };
 
-  const Like = (sellerDetails: any) => {
-    alert(`Like Property: ${sellerId} ${sellerDetails?._id}`);
+  const Like = async (sellerDetails: any) => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/seller/property/like", {
+        propertyId: sellerDetails?._id,
+        userId: sellerId
+      });
+      if (response.status === 200) {
+        fetchProperties();
+      }
+    } catch (error) {
+      console.error('Error liking property', error);
+    }
   };
-  const unlike = (sellerDetails: any) => {
-    console.log(sellerDetails)
-    alert(`unlike Property: ${sellerId} ${sellerDetails?._id}`);
-  };
+    
 
   useEffect(() => {
     fetchProperties();
@@ -188,7 +195,7 @@ const Buyer: React.FC = () => {
                 ((property as any)?.likes || [])?.includes(sellerId) ? (
                   <button
                     className="interested-button"
-                    onClick={() => unlike(property)}
+                    onClick={() => Like(property)}
                   >
                     Un Like
                   </button>
