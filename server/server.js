@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const axios = require('axios');
 
 const app = express();
 
@@ -136,16 +137,94 @@ app.post('/api/seller/property/like', async (req, res) => {
     console.log(property, propertyId)
     if ((property?.likes || [])?.includes(userId)) {
       const likes = property?.likes?.filter(id => id !== userId)
-      await Property.findByIdAndUpdate(propertyId,{
-        likes:likes
+      await Property.findByIdAndUpdate(propertyId, {
+        likes: likes
       });
     } else {
       const likes = [...(property?.likes || []), userId]
-      await Property.findByIdAndUpdate(propertyId,{
-          likes:likes
+      await Property.findByIdAndUpdate(propertyId, {
+        likes: likes
       });
     }
-    res.status(200).send({data:"liked"});
+    res.status(200).send({ data: "liked" });
+  } catch (error) {
+    console.error('Error posting property', error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/api/seller/send-mail', async (req, res) => {
+  try {
+
+    const { sellerId, userId } = req.body;
+    const seller = await User.findById(sellerId);
+    const user = await User.findById(userId);
+
+
+    await axios.post(
+      'https://api.brevo.com/v3/smtp/email',
+      {
+        sender: {
+          name: "mugeskumar",
+          email: "mugeskumar3@gmail.com",
+        },
+        messageVersions: [
+          {
+            to: [
+              {
+                email: seller?.email,
+                name: seller?.firstName,
+              }],
+          },
+        ],
+        subject: "Interested Clicked by user",
+        htmlContent: `Interested by user
+          Name : ${user?.firstName}
+          Email : ${user?.email}
+          phone : ${user?.phone}
+        `,
+      },
+      {
+        headers: {
+          'content-type': 'application/json',
+          'api-key': "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",
+          accept: 'application/json',
+        },
+      }
+    );
+
+    await axios.post(
+      'https://api.brevo.com/v3/smtp/email',
+      {
+        sender: {
+          name: "mugeskumar",
+          email: "mugeskumar3@gmail.com",
+        },
+        messageVersions: [
+          {
+            to: [
+              {
+                email: user?.email,
+                name: user?.firstName,
+              }],
+          },
+        ],
+        subject: "Interested",
+        htmlContent: `Interested Seller Detail
+          Name : ${seller?.firstName}
+          Email : ${seller?.email}
+          phone : ${seller?.phone}
+        `,
+      },
+      {
+        headers: {
+          'content-type': 'application/json',
+          'api-key': "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",
+          accept: 'application/json',
+        },
+      }
+    );
+    res.status(200).send({ data: "mail send successfully" });
   } catch (error) {
     console.error('Error posting property', error);
     res.status(500).send({ error: 'Internal Server Error' });
