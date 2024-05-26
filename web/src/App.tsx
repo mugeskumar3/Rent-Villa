@@ -1,34 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Buyer from './components/Buyer';
-import Seller from './components/Seller';
 import Login from './components/Login';
-import Register from './components/Register';
-import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
+import Register from './components/Register';
+import Seller from './components/Seller';
 
 const App: React.FC = () => {
-  const [auth, setAuth] = useState({
+  const [auth, setAuth] = useState<any>({
     isAuthenticated: false,
+    id:null,
     userType: '',
   });
 
   useEffect(() => {
     // Check if user is logged in (e.g., from localStorage)
     const userType = localStorage.getItem('userType');
-    if (userType) {
+    const sellerId = localStorage.getItem('sellerId');
+    
+    if (userType && sellerId) {
       setAuth({
         isAuthenticated: true,
+        id:sellerId || null,
         userType,
       });
     }
   }, []);
 
-  const handleLogin = (userType: string) => {
-    localStorage.setItem('userType', userType);
+  const handleLogin = (user:any) => {
+    localStorage.setItem('userType', user?.userType);
+    localStorage.setItem('sellerId', user?.sellerId);
     setAuth({
       isAuthenticated: true,
-      userType,
+      id:user?.sellerId,
+      userType:user?.userType,
     });
   };
 
@@ -36,15 +42,16 @@ const App: React.FC = () => {
     localStorage.removeItem('userType');
     setAuth({
       isAuthenticated: false,
+      id:null,
       userType: '',
     });
   };
 
   return (
     <Router>
-      <Navbar isAuthenticated={auth.isAuthenticated} onLogout={handleLogout} />
+      <Navbar isAuthenticated={auth.isAuthenticated} onLogout={handleLogout}  />
       <Routes>
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} auth={auth} />} />
         <Route path="/register" element={<Register />} />
         <Route
           path="/buyer"

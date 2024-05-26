@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './login.css';
 
 import loginImage from '../zebra-loin.png';
 
 interface LoginProps {
   onLogin: (userType: string) => void;
+  auth:any
 }
 
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: React.FC<LoginProps> = ({ onLogin,auth }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -21,12 +22,21 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     setFormData({ ...formData, [name]: value });
   };
 
+  useEffect(() => {
+    if(!auth?.isAuthenticated) return 
+    if (auth.userType === 'seller') {
+      navigate('/seller');
+    } else if(auth.userType === 'buyer') {
+      navigate('/buyer');
+    };
+  }, [auth]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/login', formData);
       if (response.data.success) {
-        onLogin(response.data.userType);
+        onLogin(response.data);
         if (response.data.userType === 'seller') {
           navigate('/seller');
         } else {
