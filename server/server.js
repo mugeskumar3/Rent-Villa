@@ -187,7 +187,7 @@ app.post('/api/seller/send-mail', async (req, res) => {
       {
         headers: {
           'content-type': 'application/json',
-          'api-key': "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",
+          'api-key': "",
           accept: 'application/json',
         },
       }
@@ -219,7 +219,7 @@ app.post('/api/seller/send-mail', async (req, res) => {
       {
         headers: {
           'content-type': 'application/json',
-          'api-key': "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",
+          'api-key': "",
           accept: 'application/json',
         },
       }
