@@ -62,8 +62,18 @@ const Buyer: React.FC = () => {
     setFilteredProperties(properties);
   };
 
-  const handleInterested = (sellerDetails: any) => {
-    alert(`Contact Seller: ${sellerDetails}`);
+  const handleInterested = async (sellerDetails: any) => {
+    try {
+      const response = await axios.post("seller/send-mail", {
+        sellerId: sellerDetails?.sellerId,
+        userId: sellerId
+      });
+      if (response.status === 200) {
+        fetchProperties();
+      }
+    } catch (error) {
+      console.error('Error liking property', error);
+    }
   };
 
   const Like = async (sellerDetails: any) => {
@@ -185,7 +195,7 @@ const Buyer: React.FC = () => {
               </div>
               <button
                 className="interested-button"
-                onClick={() => handleInterested(property.sellerDetails)}
+                onClick={() => handleInterested(property)}
               >
                 Interested
               </button>
