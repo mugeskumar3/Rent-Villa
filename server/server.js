@@ -32,20 +32,20 @@ const UserSchema = new mongoose.Schema({
   password: String,
   userType: String,
   sellerId: String,
-  
+
 });
 
-UserSchema.pre('save', async function(next) {
+UserSchema.pre('save', async function (next) {
   const user = this;
   if (!user.isModified('password')) return next();
   const hash = await bcrypt.hash(user.password, 10);
   user.password = hash;
 
-if (!user.sellerId) {
-  user.sellerId = generateSellerId(); 
-}
+  if (!user.sellerId) {
+    user.sellerId = generateSellerId();
+  }
 
-next();
+  next();
 });
 
 const User = mongoose.model('User', UserSchema);
@@ -128,6 +128,30 @@ app.delete('/api/seller/property/:id', async (req, res) => {
   }
 });
 
+app.post('/api/seller/property/like', async (req, res) => {
+  try {
+
+    const { propertyId, userId } = req.body;
+    const property = await Property.findByIdAndDelete(propertyId);
+    console.log(property, propertyId)
+    if ((property?.likes || [])?.includes(userId)) {
+      const likes = property?.likes?.filter(id => id !== userId)
+      console.log(likes,"unlike")
+
+    } else {
+      const likes = [...(property?.likes || []), userId]
+      console.log(likes,"like")
+    }
+    // const { sellerId, name, place, area, bedrooms, bathrooms, nearby } = req.body;
+    // const property = new Property({ sellerId, name, place, area, bedrooms, bathrooms, nearby });
+    // await property.save();
+    res.send();
+  } catch (error) {
+    console.error('Error posting property', error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
 app.get('/api/properties', async (req, res) => {
   try {
     const properties = await Property.find();
@@ -144,7 +168,7 @@ app.listen(PORT, () => {
 });
 
 function generateSellerId() {
-  const prefix = 'seller_'; 
-  const randomNumber = Math.floor(Math.random() * 10000); 
+  const prefix = 'seller_';
+  const randomNumber = Math.floor(Math.random() * 10000);
   return prefix + randomNumber;
 }
