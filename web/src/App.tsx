@@ -40,6 +40,7 @@ const App: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('userType');
+    localStorage.removeItem('sellerId');
     setAuth({
       isAuthenticated: false,
       id:null,
