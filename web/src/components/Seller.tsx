@@ -150,6 +150,7 @@ const Seller: React.FC = () => {
                   </p>
                 ))}
               </div>
+              <p style={{color:"green",fontWeight:700}}>{(property as any)?.likes?.length || 0} Likes</p>
               <button
                 className="seller-container__delete-button"
                 onClick={() => handleDelete(property._id)}
