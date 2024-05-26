@@ -132,20 +132,20 @@ app.post('/api/seller/property/like', async (req, res) => {
   try {
 
     const { propertyId, userId } = req.body;
-    const property = await Property.findByIdAndDelete(propertyId);
+    const property = await Property.findById(propertyId);
     console.log(property, propertyId)
     if ((property?.likes || [])?.includes(userId)) {
       const likes = property?.likes?.filter(id => id !== userId)
-      console.log(likes,"unlike")
-
+      await Property.findByIdAndUpdate(propertyId,{
+        likes:likes
+      });
     } else {
       const likes = [...(property?.likes || []), userId]
-      console.log(likes,"like")
+      await Property.findByIdAndUpdate(propertyId,{
+          likes:likes
+      });
     }
-    // const { sellerId, name, place, area, bedrooms, bathrooms, nearby } = req.body;
-    // const property = new Property({ sellerId, name, place, area, bedrooms, bathrooms, nearby });
-    // await property.save();
-    res.send();
+    res.status(200).send({data:"liked"});
   } catch (error) {
     console.error('Error posting property', error);
     res.status(500).send({ error: 'Internal Server Error' });
