@@ -16,6 +16,7 @@ interface Property {
 const Seller: React.FC = () => {
   const [error, setError] = useState("");
   const [properties, setProperties] = useState<Property[]>([]);
+
   const [propertyDetails, setPropertyDetails] = useState({
     name: "",
     place: "",
@@ -95,6 +96,7 @@ const Seller: React.FC = () => {
   useEffect(() => {
     fetchProperties();
   }, []);
+
   return (
     <>
       <div className="seller-container">

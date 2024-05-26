@@ -32,6 +32,7 @@ const UserSchema = new mongoose.Schema({
   password: String,
   userType: String,
   sellerId: String,
+  
 });
 
 UserSchema.pre('save', async function(next) {
@@ -57,6 +58,7 @@ const PropertySchema = new mongoose.Schema({
   bedrooms: String,
   bathrooms: String,
   nearby: String,
+  likes: [],
 });
 
 const Property = mongoose.model('Property', PropertySchema);

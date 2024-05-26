@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { BiArea } from "react-icons/bi";
 import { FaBath, FaBed } from "react-icons/fa";
 import { SiGooglenearby } from "react-icons/si";
-import { BiArea } from "react-icons/bi";
-import "./Buyer.css";
 import image from "../landing.jpg";
+import "./Buyer.css";
 import { HeroSection } from "./HeroSection";
-import { useNavigate } from "react-router-dom";
 
 const Buyer: React.FC = () => {
+  const sellerId = localStorage.getItem("sellerId");
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [filter, setFilter] = useState({
@@ -66,9 +66,18 @@ const Buyer: React.FC = () => {
     alert(`Contact Seller: ${sellerDetails}`);
   };
 
+  const Like = (sellerDetails: any) => {
+    alert(`Like Property: ${sellerDetails?._id}`);
+  };
+  const unlike = (sellerDetails: any) => {
+    console.log(sellerDetails)
+    alert(`unlike Property: ${sellerDetails?._id}`);
+  };
+
   useEffect(() => {
     fetchProperties();
   }, []);
+
 
 
   return (
@@ -138,7 +147,7 @@ const Buyer: React.FC = () => {
           pleasures. To be taken!
         </p>
         <div className="villasContainer">
-          {filteredProperties.map((property: any) => (
+          {filteredProperties?.map((property: any) => (
             <div key={property._id} className="card">
               <img src={image} alt="Property Image" />
 
@@ -173,6 +182,26 @@ const Buyer: React.FC = () => {
               >
                 Interested
               </button>
+
+              {(property as any)?.likes?.length || 0} Likes
+              {
+                ((property as any)?.likes || [])?.includes(sellerId) ? (
+                  <button
+                    className="interested-button"
+                    onClick={() => unlike(property)}
+                  >
+                    Un Like
+                  </button>
+                ) : (
+                  <button
+                    className="interested-button"
+                    onClick={() => Like(property)}
+                  >
+                    Like
+                  </button>
+                )
+              }
+
             </div>
           ))}
         </div>
