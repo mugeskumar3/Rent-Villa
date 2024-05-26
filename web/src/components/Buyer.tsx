@@ -67,11 +67,11 @@ const Buyer: React.FC = () => {
   };
 
   const Like = (sellerDetails: any) => {
-    alert(`Like Property: ${sellerDetails?._id}`);
+    alert(`Like Property: ${sellerId} ${sellerDetails?._id}`);
   };
   const unlike = (sellerDetails: any) => {
     console.log(sellerDetails)
-    alert(`unlike Property: ${sellerDetails?._id}`);
+    alert(`unlike Property: ${sellerId} ${sellerDetails?._id}`);
   };
 
   useEffect(() => {
