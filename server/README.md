@@ -61,9 +61,11 @@ Technologies used in the project:
 * nodemailer (for sending emails)
 * dotenv (for environment variable management)
 
-
 🛡️ License:
-This project is a private repository and is not licensed for external use. It is solely intended for internal development and use within Rent Vila. Any unauthorized reproduction, distribution, or modification of this project is strictly prohibited.
+
+This project is a private repository and is not licensed for external use.
+It is solely intended for internal development and use within Rent Vila.
+Any unauthorized reproduction, distribution, or modification of this project is strictly prohibited.
 
 👨‍💻 Developer:
 Mugesh
