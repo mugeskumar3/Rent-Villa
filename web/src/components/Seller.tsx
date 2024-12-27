@@ -34,7 +34,7 @@ const Seller: React.FC = () => {
       }
 
       const response = await axios.get(
-        `http://localhost:5000/api/seller/properties?sellerId=${sellerId}`
+        `http://localhost:4000/api/seller/properties?sellerId=${sellerId}`
       );
       setProperties(response.data);
     } catch (error) {
@@ -69,7 +69,7 @@ const Seller: React.FC = () => {
         throw new Error("Seller ID not found.");
       }
 
-      await axios.post("http://localhost:5000/api/seller/property", {
+      await axios.post("http://localhost:4000/api/seller/property", {
         ...propertyDetails,
         sellerId,
       });
@@ -93,7 +93,7 @@ const Seller: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/seller/property/${id}`);
+      await axios.delete(`http://localhost:4000/api/seller/property/${id}`);
       fetchProperties();
     } catch (error) {
       console.error("Error deleting property", error);

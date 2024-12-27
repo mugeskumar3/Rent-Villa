@@ -40,7 +40,7 @@ const Buyer: React.FC = () => {
   const fetchProperties = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/properties");
+      const response = await axios.get("http://localhost:4000/api/properties");
       setProperties(response.data);
       setFilteredProperties(response.data);
     } catch (error) {
@@ -95,7 +95,7 @@ const Buyer: React.FC = () => {
   const handleInterested = async (sellerDetails: Property) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/seller/send-mail",
+        "http://localhost:4000/api/seller/send-mail",
         {
           sellerId: sellerDetails?._id,
           userId: sellerId,
@@ -112,7 +112,7 @@ const Buyer: React.FC = () => {
   const handleLike = async (propertyId: string) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/seller/property/like",
+        "http://localhost:4000/api/seller/property/like",
         {
           propertyId,
           userId: sellerId,

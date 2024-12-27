@@ -59,7 +59,7 @@ const Register: React.FC = () => {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/register", formData);
+      await axios.post("http://localhost:4000/api/register", formData);
       alert("User registered successfully");
       resetForm();
       navigate("/login");
